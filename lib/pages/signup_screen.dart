@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_unnecessary_containers, must_be_immutable, use_build_context_synchronously
 import "package:flutter/material.dart";
+import "package:flutter/widgets.dart";
 import "package:vtag/components/button_component.dart";
 import "package:vtag/components/button_component2.dart";
 import "package:vtag/components/snackbar_component.dart";
@@ -29,6 +30,7 @@ class _SignupScreenState extends State<SignupScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.black,
         body: Container(
           child: Padding(
             padding: const EdgeInsets.all(15),
@@ -42,15 +44,15 @@ class _SignupScreenState extends State<SignupScreen> {
                       style: TextStyle(
                           fontFamily: "PoppinsSemiBold",
                           fontSize: 35,
-                          color: Colors.black),
+                          color: Colors.white),
                     ),
-                    const SizedBox(height: 5),
+                    const SizedBox(height: 15),
                     const Text(
                       "Please sign up.",
                       style: TextStyle(
                           fontFamily: "PoppinsRegular",
                           fontSize: 15,
-                          color: Colors.grey),
+                          color: greyColor),
                     ),
                     const Text(
                       "Enjoy the app power to the fullest!",
@@ -123,7 +125,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               text: "Sign Up",
                             ),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 30),
                     const Text(
                       "By clicking on sign up, you agree to Vtag's",
                       style: TextStyle(
@@ -140,26 +142,29 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                     const SizedBox(height: 200),
                     Center(
-                      child: GestureDetector(
-                        onTap: widget.changeScreen,
-                        child: const Column(
-                          children: [
-                            Text(
-                              "Already have an account?",
-                              style: TextStyle(
-                                  fontFamily: "PoppinsRegular",
-                                  fontSize: 15,
-                                  color: Colors.grey),
-                            ),
-                            Text(
+                      child: Column(
+                        children: [
+                          const Text(
+                            "Already have an account?",
+                            style: TextStyle(
+                                fontFamily: "PoppinsRegular",
+                                fontSize: 15,
+                                color: greyColor),
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          GestureDetector(
+                            onTap: widget.changeScreen,
+                            child: const Text(
                               "Log In",
                               style: TextStyle(
-                                  color: Colors.black,
+                                  color: Colors.white,
                                   fontFamily: "PoppinsSemiBold",
                                   fontSize: 15),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     )
                   ]),

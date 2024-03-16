@@ -215,7 +215,7 @@ class _ProfileCreationScreenState extends State<ProfileCreationScreen> {
 
                           String profilePhotoAsString =
                               await storageMethods.uploadImageToStorage(
-                                  "profilePics", profileImage!);
+                                  "profilePics", profileImage!, false);
                           Navigator.push(
                               context,
                               MaterialPageRoute(

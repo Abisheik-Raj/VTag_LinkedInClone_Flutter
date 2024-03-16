@@ -13,22 +13,29 @@ class TextFieldComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final border = OutlineInputBorder(
-        borderRadius: BorderRadius.circular(10),
-        borderSide: const BorderSide(color: greyColor));
+    const border =
+        UnderlineInputBorder(borderSide: BorderSide(color: greyColor));
 
     return TextField(
       controller: controller,
       obscureText: obscureText,
-      cursorColor: Colors.black,
+      cursorColor: blueColor,
       style: const TextStyle(
-          color: Colors.black, fontFamily: "PoppinsRegular", fontSize: 15),
+        color: blueColor,
+        fontFamily: "PoppinsRegular",
+        fontSize: 15,
+      ),
       decoration: InputDecoration(
-        hintText: hintText,
-        hintStyle: const TextStyle(
-            color: greyColor, fontFamily: "PoppinsRegular", fontSize: 15),
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+        labelText: hintText,
+        floatingLabelStyle: const TextStyle(
+            color: Colors.white,
+            fontFamily: "PoppinsRegular",
+            fontSize: 17,
+            height: 0.1),
+        floatingLabelBehavior: FloatingLabelBehavior.auto,
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 10,
+        ),
         enabledBorder: border,
         focusedBorder: border,
         disabledBorder: border,

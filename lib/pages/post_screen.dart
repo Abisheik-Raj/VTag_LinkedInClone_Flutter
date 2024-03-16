@@ -160,7 +160,7 @@ class _PostScreenState extends State<PostScreen> {
                 if (widget.selectedImages.isNotEmpty) {
                   for (var image in widget.selectedImages) {
                     listWithImagesUrl.add(await storageMethods
-                        .uploadImageToStorage("posts", image));
+                        .uploadImageToStorage("posts", image, true));
                   }
                 }
 
@@ -178,6 +178,7 @@ class _PostScreenState extends State<PostScreen> {
                   likes: [],
                   profileImgUrl: userData["profilePhotoUrl"],
                   publishedDateTime: DateTime.now(),
+                  email: userData["email"],
                 );
 
                 final uploadPostResponse = FirebaseMethods().uploadPost(post);

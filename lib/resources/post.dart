@@ -6,6 +6,7 @@ class Post {
   String profileImgUrl;
   List likes;
   DateTime publishedDateTime;
+  String email;
 
   Post({
     required this.description,
@@ -15,6 +16,7 @@ class Post {
     required this.likes,
     required this.profileImgUrl,
     required this.publishedDateTime,
+    required this.email,
   });
 
   Map<String, dynamic> toJson() {
@@ -26,6 +28,9 @@ class Post {
       "likes": likes,
       "profileImgUrl": profileImgUrl,
       "publishedDateTime": publishedDateTime,
+      "email": email,
+      "comments": [],
+      "downloads": [],
     };
   }
 }

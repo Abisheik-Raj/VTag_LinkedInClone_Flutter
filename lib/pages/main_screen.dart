@@ -36,41 +36,43 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.black,
         bottomNavigationBar: GNav(
-            backgroundColor: Colors.white,
+            backgroundColor: Colors.transparent,
             onTabChange: (index) {
               setState(() {
                 currentPageIndex = index;
               });
             },
-            gap: 10,
+            curve: Curves.easeInCubic,
+            gap: 8,
             tabs: [
               GButton(
                 icon: MdiIcons.home,
-                iconActiveColor: blueColor,
-                iconColor: lightBlueColor,
-                textColor: blueColor,
+                iconActiveColor: Colors.white,
+                iconColor: Colors.white,
+                textColor: Colors.white,
                 text: "Home",
               ),
               const GButton(
                 icon: Icons.group,
-                iconActiveColor: blueColor,
-                iconColor: lightBlueColor,
-                textColor: blueColor,
+                iconActiveColor: Colors.white,
+                iconColor: Colors.white,
+                textColor: Colors.white,
                 text: "Network",
               ),
               const GButton(
                 icon: Icons.work,
-                iconActiveColor: blueColor,
-                iconColor: lightBlueColor,
-                textColor: blueColor,
+                iconActiveColor: Colors.white,
+                iconColor: Colors.white,
+                textColor: Colors.white,
                 text: "Jobs",
               ),
               GButton(
                 icon: MdiIcons.account,
-                iconActiveColor: blueColor,
-                iconColor: lightBlueColor,
-                textColor: blueColor,
+                iconActiveColor: Colors.white,
+                iconColor: Colors.white,
+                textColor: Colors.white,
                 text: "Profile",
               ),
             ]),

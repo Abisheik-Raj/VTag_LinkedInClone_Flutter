@@ -11,14 +11,14 @@ class ButtonComponent extends StatelessWidget {
       height: 50,
       width: double.infinity,
       decoration: BoxDecoration(
-        color: greenColor,
+        color: blueColor,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Center(
         child: Text(
           text,
           style: const TextStyle(
-              color: Colors.black, fontFamily: "PoppinsSemiBold", fontSize: 15),
+              color: Colors.white, fontFamily: "PoppinsSemiBold", fontSize: 15),
         ),
       ),
     );
