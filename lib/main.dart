@@ -1,7 +1,6 @@
 import "package:firebase_core/firebase_core.dart";
 import "package:flutter/material.dart";
 import "package:vtag/firebase_options.dart";
-import "package:vtag/pages/login_or_register_page.dart";
 import "package:vtag/services/auth_gate.dart";
 import "package:vtag/services/auth_service.dart";
 import "package:provider/provider.dart";

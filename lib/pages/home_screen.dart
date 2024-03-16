@@ -4,6 +4,7 @@ import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
 import "package:vtag/components/post_component.dart";
 import "package:vtag/pages/post_screen.dart";
+import "package:vtag/pages/setting_screens.dart";
 import "package:vtag/resources/colors.dart";
 
 class HomeScreen extends StatelessWidget {
@@ -12,6 +13,20 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => PostScreen()));
+        },
+        backgroundColor: blueColor,
+        foregroundColor: Colors.white,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(50),
+          ),
+        ),
+        child: const Icon(Icons.add),
+      ),
       backgroundColor: Colors.black,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -40,7 +55,7 @@ class HomeScreen extends StatelessWidget {
                     IconButton(
                         onPressed: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => PostScreen()));
+                              builder: (context) => const SettingsScreen()));
                         },
                         icon: const Icon(Icons.settings,
                             color: Colors.white, size: 23)),
