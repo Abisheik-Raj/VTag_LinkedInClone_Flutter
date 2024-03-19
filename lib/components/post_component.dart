@@ -1,15 +1,15 @@
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:firebase_auth/firebase_auth.dart";
-import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
-import "package:flutter/widgets.dart";
 import "package:material_design_icons_flutter/material_design_icons_flutter.dart";
 import "package:vtag/pages/comments_page.dart";
 import "package:vtag/resources/colors.dart";
 
 class PostComponent extends StatefulWidget {
   final snap;
-  const PostComponent({super.key, required this.snap});
+  final onTapDelete;
+  const PostComponent(
+      {super.key, required this.snap, required this.onTapDelete});
 
   @override
   State<PostComponent> createState() => _PostComponentState();
@@ -224,9 +224,12 @@ class _PostComponentState extends State<PostComponent> {
               ],
             ),
           ),
-          const Icon(
-            Icons.more_horiz,
-            color: greyColor,
+          GestureDetector(
+            onTap: widget.onTapDelete,
+            child: const Icon(
+              Icons.more_horiz,
+              color: greyColor,
+            ),
           )
         ],
       ),

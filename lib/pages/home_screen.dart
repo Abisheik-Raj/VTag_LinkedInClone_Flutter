@@ -1,9 +1,11 @@
 import "dart:ui";
 
 import "package:cloud_firestore/cloud_firestore.dart";
+import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:vtag/components/post_component.dart";
 import "package:vtag/pages/post_screen.dart";
+import "package:vtag/pages/profile_screen.dart";
 import "package:vtag/pages/setting_screens.dart";
 import "package:vtag/resources/colors.dart";
 
@@ -42,10 +44,22 @@ class HomeScreen extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const CircleAvatar(
-                      minRadius: 20,
-                      foregroundImage:
-                          AssetImage("assets\\images\\profile_yellow.jpg"),
+                    GestureDetector(
+                      onTap: () {
+                        final userUID = FirebaseAuth.instance.currentUser!.uid;
+
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ProfileScreen(
+                                      userUID: userUID,
+                                    )));
+                      },
+                      child: const CircleAvatar(
+                        minRadius: 20,
+                        foregroundImage:
+                            AssetImage("assets\\images\\profile_yellow.jpg"),
+                      ),
                     ),
                     const Image(
                         width: 25,
@@ -71,8 +85,10 @@ class HomeScreen extends StatelessWidget {
       body: Padding(
           padding: const EdgeInsets.all(15),
           child: StreamBuilder(
-              stream:
-                  FirebaseFirestore.instance.collection("posts").snapshots(),
+              stream: FirebaseFirestore.instance
+                  .collection("posts")
+                  .orderBy("comments", descending: true)
+                  .snapshots(),
               builder: ((context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const CircularProgressIndicator(
@@ -91,6 +107,7 @@ class HomeScreen extends StatelessWidget {
                         return Column(
                           children: [
                             PostComponent(
+                              onTapDelete: () {},
                               snap: docs[index],
                             ),
                             const SizedBox(

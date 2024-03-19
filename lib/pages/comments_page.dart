@@ -1,6 +1,5 @@
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:firebase_auth/firebase_auth.dart";
-import "package:firebase_core/firebase_core.dart";
 import "package:flutter/material.dart";
 import "package:uuid/uuid.dart";
 import "package:vtag/components/comment_card.dart";
@@ -94,18 +93,6 @@ class _CommentsPageState extends State<CommentsPage> {
                                 "comments": FieldValue.arrayUnion([commentUID])
                               });
                             }
-
-                            // if (uploadPostResponse == true) {
-                            //   setState(() {
-                            //     postIsPreparing = true;
-                            //   });
-                            //   Navigator.pop(context);
-                            // } else {
-                            //   setState(() {
-                            //     postIsPreparing = false;
-                            //   });
-                            //   showSnackbar(context, "Post not uploaded!");
-                            // }
                           } catch (e) {
                             showSnackbar(context, e.toString());
                             setState(() {
