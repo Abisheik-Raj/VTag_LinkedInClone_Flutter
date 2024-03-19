@@ -15,7 +15,6 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
-    ScrollController scrollController = ScrollController();
     Size screenSize = MediaQuery.of(context).size;
 
     final UID = FirebaseAuth.instance.currentUser!.uid;
@@ -33,12 +32,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               builder: (context, snapshots) {
                 if (snapshots.hasData) {
                   final userData = snapshots.data!.data();
-                  print(snapshots.data!.data());
 
                   return Stack(children: [
-                    Container(
+                    SizedBox(
+                      height: screenSize.height * 1,
                       child: ListView(
-                        controller: scrollController,
                         children: [
                           Container(
                             height: screenSize.height * 0.14,
@@ -65,7 +63,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       CircleAvatar(
                                         radius: 40,
                                         backgroundImage: NetworkImage(
-                                            userData!["profilePhotoUrl"]),
+                                            userData["profilePhotoUrl"]),
                                       ),
                                       UID == widget.userUID
                                           ? Container(
@@ -197,116 +195,189 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         text: "Posts",
                                       ),
                                       Tab(
-                                        text: "Highlights",
+                                        text: "Favourites",
                                       ),
                                     ],
                                   ),
                                   const SizedBox(
                                     height: 30,
                                   ),
-                                  Expanded(
-                                    child: StreamBuilder(
-                                      stream: FirebaseFirestore.instance
-                                          .collection("users")
-                                          .doc(widget.userUID)
-                                          .snapshots(),
-                                      builder: (context, snapshot) {
-                                        if (snapshot.hasData) {
-                                          var snap = snapshot.data!.data();
-                                          var posts = snap!["posts"];
+                                  SizedBox(
+                                    height: screenSize.height * 0.5,
+                                    child: TabBarView(children: [
+                                      Expanded(
+                                        child: StreamBuilder(
+                                          stream: FirebaseFirestore.instance
+                                              .collection("users")
+                                              .doc(widget.userUID)
+                                              .snapshots(),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.hasData) {
+                                              var snap = snapshot.data!.data();
+                                              var posts = snap!["posts"];
 
-                                          if (posts.isEmpty) {
-                                            return const Center(
-                                                child: Text(
-                                              "No Posts Yet",
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontFamily: "PoppinsSemibold",
-                                                  fontSize: 20),
-                                            ));
-                                          }
-                                          return ListView.builder(
-                                              itemCount: posts.length,
-                                              itemBuilder: (context, index) {
-                                                return StreamBuilder(
-                                                    stream: FirebaseFirestore
-                                                        .instance
-                                                        .collection("posts")
-                                                        .doc(posts[index])
-                                                        .snapshots(),
-                                                    builder: (context, snaps) {
-                                                      if (snaps.hasData) {
-                                                        final snapData =
-                                                            snaps.data!.data();
+                                              if (posts.isEmpty) {
+                                                return const Center(
+                                                    child: Text(
+                                                  "No Posts Yet!",
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontFamily:
+                                                          "PoppinsSemibold",
+                                                      fontSize: 20),
+                                                ));
+                                              }
+                                              return ListView.builder(
+                                                  itemCount: posts.length,
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    return StreamBuilder(
+                                                        stream:
+                                                            FirebaseFirestore
+                                                                .instance
+                                                                .collection(
+                                                                    "posts")
+                                                                .doc(posts[
+                                                                    index])
+                                                                .snapshots(),
+                                                        builder:
+                                                            (context, snaps) {
+                                                          if (snaps.hasData) {
+                                                            final snapData =
+                                                                snaps.data!
+                                                                    .data();
 
-                                                        return Column(
-                                                          children: [
-                                                            PostComponent(
-                                                                userPosts: true,
-                                                                onTapDelete:
-                                                                    () async {
-                                                                  final userID =
-                                                                      FirebaseAuth
-                                                                          .instance
-                                                                          .currentUser!
-                                                                          .uid;
+                                                            return Column(
+                                                              children: [
+                                                                PostComponent(
+                                                                    userPosts:
+                                                                        true,
+                                                                    onTapDelete:
+                                                                        () {},
+                                                                    snap:
+                                                                        snapData),
+                                                                const SizedBox(
+                                                                  height: 15,
+                                                                ),
+                                                                const Divider(
+                                                                  thickness:
+                                                                      0.7,
+                                                                  color:
+                                                                      greyColor,
+                                                                ),
+                                                                const SizedBox(
+                                                                  height: 15,
+                                                                ),
+                                                              ],
+                                                            );
+                                                          } else {
+                                                            return const Center(
+                                                              child:
+                                                                  CircularProgressIndicator(
+                                                                color:
+                                                                    blueColor,
+                                                              ),
+                                                            );
+                                                          }
+                                                        });
+                                                  });
+                                            } else {
+                                              return const Center(
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                color: blueColor,
+                                              ));
+                                            }
+                                          },
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: StreamBuilder(
+                                          stream: FirebaseFirestore.instance
+                                              .collection("users")
+                                              .doc(widget.userUID)
+                                              .snapshots(),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.hasData) {
+                                              var snap = snapshot.data!.data();
+                                              var posts = snap!["favourites"];
 
-                                                                  await FirebaseFirestore
-                                                                      .instance
-                                                                      .collection(
-                                                                          "users")
-                                                                      .doc(
-                                                                          userID)
-                                                                      .update({
-                                                                    "posts":
-                                                                        FieldValue
-                                                                            .arrayRemove([
-                                                                      posts[
-                                                                          index]
-                                                                    ])
-                                                                  });
-                                                                  await FirebaseFirestore
-                                                                      .instance
-                                                                      .collection(
-                                                                          "posts")
-                                                                      .doc(posts[
-                                                                          index])
-                                                                      .delete();
+                                              if (posts.isEmpty) {
+                                                return const Center(
+                                                    child: Text(
+                                                  "No Favourites Yet!",
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontFamily:
+                                                          "PoppinsSemibold",
+                                                      fontSize: 20),
+                                                ));
+                                              }
+                                              return ListView.builder(
+                                                  itemCount: posts.length,
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    return StreamBuilder(
+                                                        stream:
+                                                            FirebaseFirestore
+                                                                .instance
+                                                                .collection(
+                                                                    "posts")
+                                                                .doc(posts[
+                                                                    index])
+                                                                .snapshots(),
+                                                        builder:
+                                                            (context, snaps) {
+                                                          if (snaps.hasData) {
+                                                            final snapData =
+                                                                snaps.data!
+                                                                    .data();
 
-                                                                  setState(
-                                                                      () {});
-                                                                },
-                                                                snap: snapData),
-                                                            const SizedBox(
-                                                              height: 15,
-                                                            ),
-                                                            const Divider(
-                                                              thickness: 0.7,
-                                                              color: greyColor,
-                                                            ),
-                                                            const SizedBox(
-                                                              height: 15,
-                                                            ),
-                                                          ],
-                                                        );
-                                                      } else {
-                                                        return const Center(
-                                                          child:
-                                                              CircularProgressIndicator(
-                                                            color: blueColor,
-                                                          ),
-                                                        );
-                                                      }
-                                                    });
-                                              });
-                                        } else {
-                                          return const Center(
-                                              child: CircularProgressIndicator(
-                                            color: blueColor,
-                                          ));
-                                        }
-                                      },
-                                    ),
+                                                            return Column(
+                                                              children: [
+                                                                PostComponent(
+                                                                    userPosts:
+                                                                        true,
+                                                                    onTapDelete:
+                                                                        () {},
+                                                                    snap:
+                                                                        snapData),
+                                                                const SizedBox(
+                                                                  height: 15,
+                                                                ),
+                                                                const Divider(
+                                                                  thickness:
+                                                                      0.7,
+                                                                  color:
+                                                                      greyColor,
+                                                                ),
+                                                                const SizedBox(
+                                                                  height: 15,
+                                                                ),
+                                                              ],
+                                                            );
+                                                          } else {
+                                                            return const Center(
+                                                              child:
+                                                                  CircularProgressIndicator(
+                                                                color:
+                                                                    blueColor,
+                                                              ),
+                                                            );
+                                                          }
+                                                        });
+                                                  });
+                                            } else {
+                                              return const Center(
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                color: blueColor,
+                                              ));
+                                            }
+                                          },
+                                        ),
+                                      ),
+                                    ]),
                                   ),
                                 ],
                               ),

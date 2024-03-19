@@ -1,5 +1,3 @@
-import "dart:convert";
-
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
@@ -85,44 +83,49 @@ class _PostComponentState extends State<PostComponent> {
                         overflow: TextOverflow.ellipsis),
                   ),
                 ),
-                const SizedBox(height: 20),
-                Stack(children: [
-                  SizedBox(
-                    height: screenSize.height * 0.5,
-                    child: PageView.builder(
-                        onPageChanged: (value) {
-                          setState(() {
-                            currentIndexOfImage = value;
-                          });
-                        },
-                        itemCount: (widget.snap["imageUrls"] as List).length,
-                        itemBuilder: (context, index) {
-                          return Image(
-                            image: NetworkImage(
-                                widget.snap["imageUrls"][currentIndexOfImage]),
-                          );
-                        }),
-                  ),
-                  Positioned(
-                    top: 10,
-                    right: 9,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(100),
-                        color: Colors.black,
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 8),
-                      child: Text(
-                        "${currentIndexOfImage + 1}  /  ${(widget.snap["imageUrls"] as List).length}",
-                        style: const TextStyle(
-                            fontFamily: "PoppinsSemibold",
-                            color: Colors.white,
-                            fontSize: 10),
-                      ),
-                    ),
-                  ),
-                ]),
+                widget.snap["imageUrls"].length != 0
+                    ? const SizedBox(height: 20)
+                    : Container(),
+                widget.snap["imageUrls"].length != 0
+                    ? Stack(children: [
+                        SizedBox(
+                          height: screenSize.height * 0.5,
+                          child: PageView.builder(
+                              onPageChanged: (value) {
+                                setState(() {
+                                  currentIndexOfImage = value;
+                                });
+                              },
+                              itemCount:
+                                  (widget.snap["imageUrls"] as List).length,
+                              itemBuilder: (context, index) {
+                                return Image(
+                                  image: NetworkImage(widget.snap["imageUrls"]
+                                      [currentIndexOfImage]),
+                                );
+                              }),
+                        ),
+                        Positioned(
+                          top: 10,
+                          right: 9,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(100),
+                              color: Colors.black,
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 8),
+                            child: Text(
+                              "${currentIndexOfImage + 1}  /  ${(widget.snap["imageUrls"] as List).length}",
+                              style: const TextStyle(
+                                  fontFamily: "PoppinsSemibold",
+                                  color: Colors.white,
+                                  fontSize: 10),
+                            ),
+                          ),
+                        ),
+                      ])
+                    : Container(),
                 const SizedBox(
                   height: 15,
                 ),
@@ -262,6 +265,7 @@ class _PostComponentState extends State<PostComponent> {
                                     .update({
                                   "favourites": favourites,
                                 });
+                                setState(() {});
                                 Navigator.pop(context);
                               },
                               child: Row(
@@ -282,22 +286,47 @@ class _PostComponentState extends State<PostComponent> {
                                 ],
                               ),
                             ),
-                            Row(
-                              children: [
-                                const Text(
-                                  "Delete Post",
-                                  style: TextStyle(
-                                      fontFamily: "PoppinsSemibold",
-                                      color: Colors.white,
-                                      fontSize: 15),
-                                ),
-                                IconButton(
-                                    onPressed: () {},
-                                    icon: const Icon(
-                                      Icons.delete,
-                                      color: Colors.red,
-                                    ))
-                              ],
+                            GestureDetector(
+                              onTap: () {
+                                FirebaseFirestore.instance
+                                    .collection("users")
+                                    .doc(FirebaseAuth.instance.currentUser!.uid)
+                                    .update({
+                                  "posts": FieldValue.arrayRemove(
+                                    [widget.snap["postUID"]],
+                                  ),
+                                  "favourites": FieldValue.arrayRemove(
+                                      [widget.snap["postUID"]])
+                                });
+
+                                var postUID = widget.snap["postUID"];
+
+                                FirebaseFirestore.instance
+                                    .collection("posts")
+                                    .doc(postUID)
+                                    .delete();
+                                setState(() {
+                                  print(widget.snap["posts"]);
+                                });
+                                Navigator.pop(context);
+                              },
+                              child: Row(
+                                children: [
+                                  const Text(
+                                    "Delete Post",
+                                    style: TextStyle(
+                                        fontFamily: "PoppinsSemibold",
+                                        color: Colors.white,
+                                        fontSize: 15),
+                                  ),
+                                  IconButton(
+                                      onPressed: () {},
+                                      icon: const Icon(
+                                        Icons.delete,
+                                        color: Colors.red,
+                                      ))
+                                ],
+                              ),
                             ),
                           ],
                         );
@@ -310,22 +339,45 @@ class _PostComponentState extends State<PostComponent> {
                           contentPadding: const EdgeInsets.symmetric(
                               vertical: 20, horizontal: 20),
                           children: [
-                            Row(
-                              children: [
-                                const Text(
-                                  "Add to Favourite",
-                                  style: TextStyle(
-                                      fontFamily: "PoppinsSemibold",
-                                      color: Colors.white,
-                                      fontSize: 15),
-                                ),
-                                IconButton(
-                                    onPressed: () {},
-                                    icon: const Icon(
-                                      Icons.star_border_outlined,
-                                      color: Colors.yellow,
-                                    ))
-                              ],
+                            GestureDetector(
+                              onTap: () async {
+                                var docRef = FirebaseFirestore.instance
+                                    .collection("users")
+                                    .doc(
+                                        FirebaseAuth.instance.currentUser!.uid);
+
+                                var userData = await docRef.get();
+
+                                var favourites = userData["favourites"];
+                                favourites.add(widget.snap["postUID"]);
+
+                                favourites = Set.from(favourites);
+
+                                FirebaseFirestore.instance
+                                    .collection("users")
+                                    .doc(FirebaseAuth.instance.currentUser!.uid)
+                                    .update({
+                                  "favourites": favourites,
+                                });
+                                Navigator.pop(context);
+                              },
+                              child: Row(
+                                children: [
+                                  const Text(
+                                    "Add to Favourite",
+                                    style: TextStyle(
+                                        fontFamily: "PoppinsSemibold",
+                                        color: Colors.white,
+                                        fontSize: 15),
+                                  ),
+                                  IconButton(
+                                      onPressed: () {},
+                                      icon: const Icon(
+                                        Icons.star_border_outlined,
+                                        color: Colors.yellow,
+                                      ))
+                                ],
+                              ),
                             ),
                           ],
                         );
