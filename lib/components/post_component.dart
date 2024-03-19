@@ -1,6 +1,9 @@
+import "dart:convert";
+
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
+
 import "package:material_design_icons_flutter/material_design_icons_flutter.dart";
 import "package:vtag/pages/comments_page.dart";
 import "package:vtag/resources/colors.dart";
@@ -8,8 +11,12 @@ import "package:vtag/resources/colors.dart";
 class PostComponent extends StatefulWidget {
   final snap;
   final onTapDelete;
+  final bool userPosts;
   const PostComponent(
-      {super.key, required this.snap, required this.onTapDelete});
+      {super.key,
+      required this.snap,
+      required this.onTapDelete,
+      required this.userPosts});
 
   @override
   State<PostComponent> createState() => _PostComponentState();
@@ -225,12 +232,110 @@ class _PostComponentState extends State<PostComponent> {
             ),
           ),
           GestureDetector(
-            onTap: widget.onTapDelete,
+            onTap: () {
+              widget.userPosts == true
+                  ? showDialog(
+                      context: context,
+                      builder: (context) {
+                        return SimpleDialog(
+                          backgroundColor: Colors.black.withAlpha(200),
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 20, horizontal: 20),
+                          children: [
+                            GestureDetector(
+                              onTap: () async {
+                                var docRef = FirebaseFirestore.instance
+                                    .collection("users")
+                                    .doc(
+                                        FirebaseAuth.instance.currentUser!.uid);
+
+                                var userData = await docRef.get();
+
+                                var favourites = userData["favourites"];
+                                favourites.add(widget.snap["postUID"]);
+
+                                favourites = Set.from(favourites);
+
+                                FirebaseFirestore.instance
+                                    .collection("users")
+                                    .doc(FirebaseAuth.instance.currentUser!.uid)
+                                    .update({
+                                  "favourites": favourites,
+                                });
+                                Navigator.pop(context);
+                              },
+                              child: Row(
+                                children: [
+                                  const Text(
+                                    "Add to Favourite",
+                                    style: TextStyle(
+                                        fontFamily: "PoppinsSemibold",
+                                        color: Colors.white,
+                                        fontSize: 15),
+                                  ),
+                                  IconButton(
+                                      onPressed: () {},
+                                      icon: const Icon(
+                                        Icons.star_border_outlined,
+                                        color: Colors.yellow,
+                                      ))
+                                ],
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                const Text(
+                                  "Delete Post",
+                                  style: TextStyle(
+                                      fontFamily: "PoppinsSemibold",
+                                      color: Colors.white,
+                                      fontSize: 15),
+                                ),
+                                IconButton(
+                                    onPressed: () {},
+                                    icon: const Icon(
+                                      Icons.delete,
+                                      color: Colors.red,
+                                    ))
+                              ],
+                            ),
+                          ],
+                        );
+                      })
+                  : showDialog(
+                      context: context,
+                      builder: (context) {
+                        return SimpleDialog(
+                          backgroundColor: Colors.black.withAlpha(200),
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 20, horizontal: 20),
+                          children: [
+                            Row(
+                              children: [
+                                const Text(
+                                  "Add to Favourite",
+                                  style: TextStyle(
+                                      fontFamily: "PoppinsSemibold",
+                                      color: Colors.white,
+                                      fontSize: 15),
+                                ),
+                                IconButton(
+                                    onPressed: () {},
+                                    icon: const Icon(
+                                      Icons.star_border_outlined,
+                                      color: Colors.yellow,
+                                    ))
+                              ],
+                            ),
+                          ],
+                        );
+                      });
+            },
             child: const Icon(
               Icons.more_horiz,
               color: greyColor,
             ),
-          )
+          ),
         ],
       ),
     );

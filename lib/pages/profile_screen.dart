@@ -242,6 +242,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                         return Column(
                                                           children: [
                                                             PostComponent(
+                                                                userPosts: true,
                                                                 onTapDelete:
                                                                     () async {
                                                                   final userID =

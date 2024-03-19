@@ -108,6 +108,7 @@ class HomeScreen extends StatelessWidget {
                           children: [
                             PostComponent(
                               onTapDelete: () {},
+                              userPosts: false,
                               snap: docs[index],
                             ),
                             const SizedBox(

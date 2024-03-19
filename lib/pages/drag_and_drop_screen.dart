@@ -436,7 +436,7 @@ class _DragAndDropScreenState extends State<DragAndDropScreen> {
                           "profilePhotoUrl": widget.profilePhotoUrl,
                           "following": [],
                           "followers": [],
-                          "highlights": [],
+                          "favourites": [],
                         });
 
                         Navigator.pushAndRemoveUntil(
