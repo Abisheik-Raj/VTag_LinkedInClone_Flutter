@@ -20,7 +20,7 @@ class _TextFieldComponent2State extends State<TextFieldComponent2> {
   Widget build(BuildContext context) {
     final enabledBorder = OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
-        borderSide: const BorderSide(color: Colors.black));
+        borderSide: const BorderSide(color: Colors.white));
 
     final focusedBorder = OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
@@ -29,9 +29,9 @@ class _TextFieldComponent2State extends State<TextFieldComponent2> {
     return TextField(
       controller: widget.controller,
       keyboardType: widget.textInputType,
-      cursorColor: Colors.black,
+      cursorColor: blueColor,
       style: const TextStyle(
-          color: Colors.black, fontFamily: "PoppinsRegular", fontSize: 15),
+          color: blueColor, fontFamily: "PoppinsRegular", fontSize: 15),
       decoration: InputDecoration(
         // suffixIcon: Icon(
         //   size: 25,
@@ -45,12 +45,12 @@ class _TextFieldComponent2State extends State<TextFieldComponent2> {
           child: const Text(
             "✖",
             style: TextStyle(
-                color: Colors.black, fontFamily: "PoppinsBold", fontSize: 12),
+                color: blueColor, fontFamily: "PoppinsBold", fontSize: 12),
           ),
         ),
         hintText: widget.hintText,
         hintStyle: const TextStyle(
-            color: greyColor, fontFamily: "PoppinsRegular", fontSize: 12),
+            color: blueColor, fontFamily: "PoppinsRegular", fontSize: 12),
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         enabledBorder: enabledBorder,

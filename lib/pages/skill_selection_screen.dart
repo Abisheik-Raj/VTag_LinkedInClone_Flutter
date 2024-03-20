@@ -1,12 +1,17 @@
 // ignore_for_file: must_be_immutable
 
+import "package:cloud_firestore/cloud_firestore.dart";
+import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
+import "package:provider/provider.dart";
 import "package:vtag/components/button_component.dart";
 import "package:vtag/components/signup_page_progress_indicator.dart";
 import "package:vtag/components/skill_chip.dart";
 import "package:vtag/pages/drag_and_drop_screen.dart";
+import "package:vtag/pages/main_screen.dart";
 import "package:vtag/resources/colors.dart";
 import "package:vtag/resources/skill_set.dart";
+import "package:vtag/services/auth_service.dart";
 
 class SkillSelectionScreen extends StatefulWidget {
   String username;
@@ -31,6 +36,7 @@ class _SkillSelectionScreenState extends State<SkillSelectionScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
+      backgroundColor: Colors.black,
       // ignore: avoid_unnecessary_containers
       body: Container(
         child: SingleChildScrollView(
@@ -51,14 +57,15 @@ class _SkillSelectionScreenState extends State<SkillSelectionScreen> {
                       },
                       child: const Icon(
                         Icons.arrow_back,
+                        color: Colors.white,
                         size: 25,
                       ),
                     ),
                     const SizedBox(
                       width: 10,
                     ),
-                    const SignupPageProgessIndicator(fillColor: greenColor),
-                    const SignupPageProgessIndicator(fillColor: greenColor),
+                    const SignupPageProgessIndicator(fillColor: blueColor),
+                    const SignupPageProgessIndicator(fillColor: blueColor),
                     const SignupPageProgessIndicator(
                         fillColor: Color.fromARGB(255, 223, 220, 220)),
                   ],
@@ -71,7 +78,7 @@ class _SkillSelectionScreenState extends State<SkillSelectionScreen> {
                   style: TextStyle(
                       fontFamily: "PoppinsSemiBold",
                       fontSize: 35,
-                      color: Colors.black),
+                      color: Colors.white),
                 ),
                 const SizedBox(height: 5),
                 const Text(
@@ -79,7 +86,7 @@ class _SkillSelectionScreenState extends State<SkillSelectionScreen> {
                   style: TextStyle(
                       fontFamily: "PoppinsRegular",
                       fontSize: 15,
-                      color: Colors.black),
+                      color: greyColor),
                 ),
                 const SizedBox(
                   height: 30,
@@ -97,7 +104,7 @@ class _SkillSelectionScreenState extends State<SkillSelectionScreen> {
                               style: const TextStyle(
                                   fontFamily: "PoppinsSemiBold",
                                   fontSize: 20,
-                                  color: Colors.black),
+                                  color: Colors.white),
                             ),
                             const SizedBox(height: 5),
                             Wrap(
@@ -146,7 +153,7 @@ class _SkillSelectionScreenState extends State<SkillSelectionScreen> {
                       style: const TextStyle(
                           fontFamily: "PoppinsSemiBold",
                           fontSize: 18,
-                          color: Colors.black),
+                          color: Colors.white),
                     ),
                   ],
                 ),
@@ -155,15 +162,46 @@ class _SkillSelectionScreenState extends State<SkillSelectionScreen> {
                 ),
                 GestureDetector(
                     onTap: () {
-                      Navigator.push(
+                      final FirebaseFirestore firebaseFirestore =
+                          FirebaseFirestore.instance;
+                      final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+
+                      firebaseFirestore
+                          .collection("users")
+                          .doc(firebaseAuth.currentUser!.uid)
+                          .update({
+                        "username": widget.username,
+                        "phonenumber": widget.phonenumber,
+                        "selectedskills": userSkillList,
+                        "gettingstarted": [],
+                        "knowthebasics": [],
+                        "builtprojects": [],
+                        "workexperience": [],
+                        "profilePhotoUrl": widget.profilePhotoUrl,
+                        "following": [],
+                        "followers": [],
+                        "favourites": [],
+                      });
+
+                      Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => DragAndDropScreen(
-                                    username: widget.username,
-                                    phonenumber: widget.phonenumber,
-                                    selectedSkills: userSkillList,
-                                    profilePhotoUrl: widget.profilePhotoUrl,
-                                  )));
+                              builder: (context) => const MainScreen()),
+                          (route) => false);
+
+                      Provider.of<AuthService>(context, listen: false)
+                          .confirmSignupDoneByUser();
+
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //       builder: (context) => DragAndDropScreen(
+                      //             username: widget.username,
+                      //             phonenumber: widget.phonenumber,
+                      //             selectedSkills: userSkillList,
+                      //             profilePhotoUrl: widget.profilePhotoUrl,
+                      //           )),
+                      // );
                     },
                     child: const ButtonComponent(text: "Next")),
               ],

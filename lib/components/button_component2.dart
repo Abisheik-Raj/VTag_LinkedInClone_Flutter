@@ -10,7 +10,7 @@ class ButtonComponent2 extends StatelessWidget {
       height: 50,
       width: double.infinity,
       decoration: BoxDecoration(
-        color: greenColor,
+        color: blueColor,
         borderRadius: BorderRadius.circular(10),
       ),
       child: const Center(
@@ -18,7 +18,7 @@ class ButtonComponent2 extends StatelessWidget {
         height: 20,
         width: 20,
         child: CircularProgressIndicator(
-          color: Colors.black,
+          color: Colors.white,
         ),
       )),
     );

@@ -84,6 +84,7 @@ class _ProfileCreationScreenState extends State<ProfileCreationScreen> {
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.black,
         // ignore: avoid_unnecessary_containers
         body: Container(
           child: Padding(
@@ -98,7 +99,7 @@ class _ProfileCreationScreenState extends State<ProfileCreationScreen> {
                   const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      SignupPageProgessIndicator(fillColor: greenColor),
+                      SignupPageProgessIndicator(fillColor: blueColor),
                       SignupPageProgessIndicator(
                           fillColor: Color.fromARGB(255, 223, 220, 220)),
                       SignupPageProgessIndicator(
@@ -113,7 +114,7 @@ class _ProfileCreationScreenState extends State<ProfileCreationScreen> {
                     style: TextStyle(
                         fontFamily: "PoppinsSemiBold",
                         fontSize: 35,
-                        color: Colors.black),
+                        color: Colors.white),
                   ),
                   const SizedBox(height: 5),
                   const Text(
@@ -121,7 +122,7 @@ class _ProfileCreationScreenState extends State<ProfileCreationScreen> {
                     style: TextStyle(
                         fontFamily: "PoppinsRegular",
                         fontSize: 15,
-                        color: Colors.black),
+                        color: greyColor),
                   ),
                   const SizedBox(
                     height: 50,
@@ -159,7 +160,7 @@ class _ProfileCreationScreenState extends State<ProfileCreationScreen> {
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(100)),
                             child: const Icon(Icons.camera_alt_rounded,
-                                color: greenColor),
+                                color: blueColor),
                           ),
                         ),
                       )
@@ -171,7 +172,7 @@ class _ProfileCreationScreenState extends State<ProfileCreationScreen> {
                   const Text(
                     "Full name",
                     style: TextStyle(
-                        color: Colors.black,
+                        color: Colors.white,
                         fontFamily: "PoppinsRegular",
                         fontSize: 15),
                   ),
@@ -187,7 +188,7 @@ class _ProfileCreationScreenState extends State<ProfileCreationScreen> {
                   const Text(
                     "Phone number",
                     style: TextStyle(
-                        color: Colors.black,
+                        color: Colors.white,
                         fontFamily: "PoppinsRegular",
                         fontSize: 15),
                   ),

@@ -1,6 +1,7 @@
 import "package:firebase_core/firebase_core.dart";
 import "package:flutter/material.dart";
 import "package:vtag/firebase_options.dart";
+import "package:vtag/pages/network_screen.dart";
 import "package:vtag/services/auth_gate.dart";
 import "package:vtag/services/auth_service.dart";
 import "package:provider/provider.dart";
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: AuthGate(),
     );

@@ -84,24 +84,121 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                     color: Colors.white),
                                               ),
                                             )
-                                          : Container(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 25,
-                                                      vertical: 6),
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                                color: Colors.white,
-                                              ),
-                                              child: const Text(
-                                                "Follow",
-                                                style: TextStyle(
-                                                    fontFamily:
-                                                        "PoppinsSemiBold",
-                                                    color: Colors.black),
-                                              ),
-                                            ),
+                                          : StreamBuilder(
+                                              stream: FirebaseFirestore.instance
+                                                  .collection("users")
+                                                  .doc(FirebaseAuth.instance
+                                                      .currentUser!.uid)
+                                                  .snapshots(),
+                                              builder: (context, snapshots) {
+                                                if (snapshots.hasData) {
+                                                  final snapData =
+                                                      snapshots.data!.data();
+
+                                                  return GestureDetector(
+                                                    onTap: () {
+                                                      if (snapData["following"]
+                                                          .contains(
+                                                              widget.userUID)) {
+                                                        FirebaseFirestore
+                                                            .instance
+                                                            .collection("users")
+                                                            .doc(FirebaseAuth
+                                                                .instance
+                                                                .currentUser!
+                                                                .uid)
+                                                            .update({
+                                                          "following":
+                                                              FieldValue
+                                                                  .arrayRemove([
+                                                            widget.userUID
+                                                          ])
+                                                        });
+
+                                                        FirebaseFirestore
+                                                            .instance
+                                                            .collection("users")
+                                                            .doc(widget.userUID)
+                                                            .update({
+                                                          "following":
+                                                              FieldValue
+                                                                  .arrayRemove([
+                                                            FirebaseAuth
+                                                                .instance
+                                                                .currentUser!
+                                                                .uid
+                                                          ])
+                                                        });
+                                                      } else {
+                                                        FirebaseFirestore
+                                                            .instance
+                                                            .collection("users")
+                                                            .doc(FirebaseAuth
+                                                                .instance
+                                                                .currentUser!
+                                                                .uid)
+                                                            .update({
+                                                          "following":
+                                                              FieldValue
+                                                                  .arrayUnion([
+                                                            widget.userUID
+                                                          ])
+                                                        });
+
+                                                        FirebaseFirestore
+                                                            .instance
+                                                            .collection("users")
+                                                            .doc(widget.userUID)
+                                                            .update({
+                                                          "following":
+                                                              FieldValue
+                                                                  .arrayUnion([
+                                                            FirebaseAuth
+                                                                .instance
+                                                                .currentUser!
+                                                                .uid
+                                                          ])
+                                                        });
+                                                      }
+                                                    },
+                                                    child: Container(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          horizontal: 25,
+                                                          vertical: 6),
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20),
+                                                        color: Colors.white,
+                                                      ),
+                                                      child: snapData![
+                                                                      "following"]
+                                                                  .contains(widget
+                                                                      .userUID) ==
+                                                              true
+                                                          ? const Text(
+                                                              "UnFollow",
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      "PoppinsSemiBold",
+                                                                  color: Colors
+                                                                      .black),
+                                                            )
+                                                          : const Text(
+                                                              "Follow",
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      "PoppinsSemiBold",
+                                                                  color: Colors
+                                                                      .black),
+                                                            ),
+                                                    ),
+                                                  );
+                                                } else {
+                                                  return Container();
+                                                }
+                                              }),
                                     ],
                                   ),
                                   const SizedBox(

@@ -36,15 +36,15 @@ class _SkillChipState extends State<SkillChip> {
   @override
   Widget build(BuildContext context) {
     Widget xWidget = const Text(
-      "✖",
+      "✘",
       style: TextStyle(
-          color: Colors.black, fontFamily: "PoppinsBold", fontSize: 12),
+          color: Colors.white, fontFamily: "PoppinsBold", fontSize: 15),
     );
 
     return GestureDetector(
         onTap: () {
           if (chipColor == Colors.white && widget.getNumberOfItems!() < 10) {
-            chipColor = greenColor;
+            chipColor = blueColor;
             showDeleteIcon = true;
             widget.increaseNoOfSkills!();
           }
@@ -53,7 +53,7 @@ class _SkillChipState extends State<SkillChip> {
         child: Chip(
             padding: const EdgeInsets.all(8),
             onDeleted: () {
-              if (chipColor == greenColor) {
+              if (chipColor == blueColor) {
                 chipColor = Colors.white;
                 showDeleteIcon = false;
                 widget.decreaseNoOfSkills!();
